@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Simple node js server</title>
+  <script
+  src="https://code.jquery.com/jquery-2.2.4.min.js"
+  integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+  crossorigin="anonymous"></script>
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+
+  <style>
+  .no-close .ui-dialog-titlebar-close {display: none }
+  .hidden {display: none }
+</style>
+</head>
+
+<body>
+  <h2>Sample JS SDK Usage</h2>
+  <h3>User Id/Login</h3>
+  <div>User Id: <span id="user-id"></span><button id="btn-login">Login</button></div>
+  <div id="dialog-message" title="Login" class="hidden">
+    <p>
+      <input type="text" id="input-login" placeholder="User Id" />
+    </p>
+  </div>
+  <h3>Web push registration</h3>
+  <div>
+    <button id="btn-reg-push">Register for web push</button>
+
+    <button id="btn-unreg-push">Unregister for web push</button>
+  </div>
+
+  <h3>Track event with param</h3>
+  <p>
+    <label for="input-search">Search:</label>
+    <input type="Search" id="input-search" placeholder="Search here..." />
+    <button id="btn-search">Search</button>
+  </p>
+
+  <h3>Opt-in Ab test</h3>  
+  <p>Changes theme from Dark to Light</p> 
+  <div>
+    <button id="btn-opt-in">Opt-In Theme AB Test</button>
+
+    <button id="btn-opt-out">Opt-Out Theme AB Test</button>
+  </div>
+  <p>
+    <label>Theme:&nbsp;</label>
+    <span id="theme"></span>
+  </p>
+
+  <h3>App-Inbox messages</h3>  
+  <div>
+    <button id="btn-get-messages">Get Inbox messages</button>
+  </div>
+  <div id="messages" class="hidden">
+    No messages.
+  </div>
+
+  <script id="inbox-template" type="text/x-jsrender">
+    <p>
+      <div>Title: {{:messageData.vars.Title}}</div>
+      <div>Subtitle: {{:messageData.vars.Subtitle}}</div>
+      <div>Delivered: {{:~dateTime(deliveryTimestamp)}}</div>
+      <div>IsRead: {{:isRead}}</div>
+    </p>
+  </script>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsrender/0.9.90/jsrender.min.js"></script>
+  <script type="text/javascript" src="vendor/leanplum.min.js"></script>
+  <script type="text/javascript" src="constants.js"></script>
+  <script type="text/javascript" src="utilities.js"></script>
+  <script type="text/javascript" src="main.js"></script>
+</body>
+
+</html>
