@@ -2,7 +2,7 @@
 
   Utilities.lpInit();
 
-  Utilities.lpEnablePauseResumeSession();
+  // Utilities.lpEnablePauseResumeSession();
 
   $(document).ready(function () {
 
@@ -90,17 +90,36 @@ $("#btn-opt-out").click(function (sender) {
 // App-Inbox
 $("#btn-get-messages").click(function(){
   Utilities.lpGetNewsFeedMessages().then(function(messages){
-    if(messages){
+    // TODO: Sort by delivered timestamp
+    if(messages && Object.keys(messages).length > 0){
       var messagesToRender = [];
       for (var msg in messages) {
-        messagesToRender.push(messages[msg]);
+        var inboxMsg = messages[msg];
+        inboxMsg.id = msg;
+        messagesToRender.push(inboxMsg);
       }
       var helpers = {
         dateTime: function(val) { return new Date(val); },
       };
       var tmpl = $.templates("#inbox-template");
       var html = tmpl.render(messagesToRender, helpers);
-      $(document).find("#messages").html(html);
+      var messagesTemplate = $(document).find("#messages");
+      messagesTemplate.html(html);
+      messagesTemplate.on('click', '.btn-read', function(){
+       var messageId = $(this).data('id');
+       Utilities.lpMarkNewsFeedMessageAsRead(messageId).then(function(){
+        console.log("Read");
+      });
+     });
+      messagesTemplate.on('click', '.btn-delete', function(){
+       var messageId = $(this).data('id');
+       Utilities.lpDeleteNewsFeedMessage(messageId).then(function(){
+        console.log("Deleted");
+      });
+     });
+    } else {
+      // If No messages are returned after delete and without page refresh
+      $(document).find("#messages").text("No messages.");
     }
     $(document).find("#messages").show();
   })

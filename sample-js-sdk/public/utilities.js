@@ -95,7 +95,6 @@ var lpGetNewsFeedMessages = function () {
         clientKey:Constants.LEANPLUM_CONFIG.PROD.KEY,
         userId: Leanplum._userId,
         deviceId:Leanplum._deviceId,
-        includeDefaults:false,
         apiVersion: Constants.LEANPLUM_CONFIG.API_VERSION
       };
       $.ajax({
@@ -116,6 +115,47 @@ var lpGetNewsFeedMessages = function () {
         }
       });
     }});
+};
+
+var lpNewsFeedMessageAction = function (action, messageId) {
+  return new Promise((resolve, reject) => {
+    var deviceId = Leanplum._deviceId;
+    var userId = Leanplum._userId;
+    if(deviceId && userId && action && messageId) {
+      var params = {
+        action:action,
+        appId:Constants.LEANPLUM_CONFIG.PROD.ID,
+        clientKey:Constants.LEANPLUM_CONFIG.PROD.KEY,
+        userId: Leanplum._userId,
+        deviceId:Leanplum._deviceId,
+        newsfeedMessageId:messageId,
+        apiVersion: Constants.LEANPLUM_CONFIG.API_VERSION
+      };
+      $.ajax({
+        url:"https://www.leanplum.com/api",
+        method: "GET",
+        data: params,
+        success: function (data) {
+          console.log(data);
+          if(data && data["response"][0]["success"]) {
+            return resolve(data);
+          } else{
+            return reject('Error processing app-inbox messages.');
+          }
+        },
+        error: function (xhr){
+          return reject('Error fetching app-inbox messages.');
+        }
+      });
+    }});
+};
+
+var lpMarkNewsFeedMessageAsRead = function (messageId) {
+  return lpNewsFeedMessageAction('markNewsfeedMessageAsRead', messageId);
+};
+
+var lpDeleteNewsFeedMessage = function (messageId) {
+  return lpNewsFeedMessageAction('deleteNewsfeedMessage', messageId);
 };
 
 var lpInit = function (isDevelopmentMode) {
@@ -212,7 +252,9 @@ var onVisibilityChange = function(callback) {
     lpForceContentUpdate: lpForceContentUpdate,
     lpInit:lpInit,
     lpEnablePauseResumeSession: lpEnablePauseResumeSession,
-    lpGetNewsFeedMessages: lpGetNewsFeedMessages
+    lpGetNewsFeedMessages: lpGetNewsFeedMessages,
+    lpMarkNewsFeedMessageAsRead: lpMarkNewsFeedMessageAsRead,
+    lpDeleteNewsFeedMessage: lpDeleteNewsFeedMessage
   }
 
 }(Leanplum));
